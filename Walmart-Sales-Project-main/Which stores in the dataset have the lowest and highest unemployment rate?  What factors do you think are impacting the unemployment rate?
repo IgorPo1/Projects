@@ -1,0 +1,13 @@
+Store 23 has the lowest unemployment rate (4.796) while Store 12 has the highest (13.116).
+
+The correlation matrix reveals a few potential factors that might be influencing the unemployment rate:
+
+CPI (Consumer Price Index): There's a moderate negative correlation (-0.302) between Unemployment and CPI, suggesting that higher consumer prices might be associated with lower unemployment rates. 
+This could be due to increased economic activity during periods of inflation.
+Weekly_Sales: A weak negative correlation (-0.106) exists between Unemployment and Weekly_Sales, indicating that stores with higher sales might have slightly lower unemployment rates.
+This could be because successful stores can afford to hire more employees.
+Temperature: A weak positive correlation (0.101) is observed between Unemployment and Temperature, suggesting that warmer temperatures might be slightly associated with higher unemployment rates.
+This could be due to seasonal employment fluctuations or other factors related to weather patterns.
+Fuel_Price: The correlation between Unemployment and Fuel_Price is very weak (-0.035) and might not be significant.
+It's important to note that correlation does not imply causation, and further analysis would be needed to determine the exact factors impacting the unemployment rate in these stores. 
+Other factors not included in this dataset, such as local economic conditions, industry trends, and government policies, could also play a significant role.

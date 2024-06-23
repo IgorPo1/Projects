@@ -1,0 +1,24 @@
+import pandas as pd
+# Read csv file with all data ('file path')
+df = pd.read_csv('/Users/igorpolidva/PycharmProjects/Walmart Sales/Walmart_Sales.csv')
+# Group by `Store` and calculate mean `Unemployment`
+store_unemployment = df.groupby('Store')['Unemployment'].mean()
+
+# Find the store with the lowest unemployment rate
+lowest_unemployment_store = store_unemployment.idxmin()
+lowest_unemployment_rate = store_unemployment.min()
+
+# Find the store with the highest unemployment rate
+highest_unemployment_store = store_unemployment.idxmax()
+highest_unemployment_rate = store_unemployment.max()
+
+# Print the results
+print(f"Store with the lowest unemployment rate: {lowest_unemployment_store} ({lowest_unemployment_rate:.3f})")
+print(f"Store with the highest unemployment rate: {highest_unemployment_store} ({highest_unemployment_rate:.3f})")
+
+# Calculate the correlation matrix
+correlation_matrix = df[['Unemployment', 'Weekly_Sales', 'Temperature', 'Fuel_Price', 'CPI']].corr()
+
+# Print the correlation matrix
+print("\nCorrelation Matrix:")
+print(correlation_matrix)

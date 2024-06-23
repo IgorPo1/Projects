@@ -1,0 +1,13 @@
+import pandas as pd
+
+df = pd.read_csv('/Users/igorpolidva/PycharmProjects/Walmart Sales/Walmart_Sales.csv')
+# Calculate correlation for holiday weeks
+holiday_correlation = df[df['Holiday_Flag'] == 1]['CPI'].corr(df[df['Holiday_Flag'] == 1]['Weekly_Sales'])
+
+# Calculate correlation for non-holiday weeks
+non_holiday_correlation = df[df['Holiday_Flag'] == 0]['CPI'].corr(df[df['Holiday_Flag'] == 0]['Weekly_Sales'])
+
+# Print the results
+print(f"Correlation between CPI and Weekly Sales during holiday weeks: {holiday_correlation:.3f}")
+print(f"Correlation between CPI and Weekly Sales during non-holiday weeks: {non_holiday_correlation:.3f}")
+print(df.head())

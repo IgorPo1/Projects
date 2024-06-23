@@ -1,0 +1,4 @@
+The correlation between CPI and Weekly_Sales is negative for both holiday and non-holiday weeks, indicating that higher consumer prices tend to be associated with lower weekly sales.
+
+However, the correlation is stronger during holiday weeks (-0.151) compared to non-holiday weeks (-0.057).
+This suggests that the negative impact of higher consumer prices on sales is more pronounced during holidays, possibly due to consumers being more price-sensitive during these periods or having other spending priorities.

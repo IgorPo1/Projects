@@ -1,0 +1,26 @@
+import pandas as pd
+
+def cleaning():
+    pd.set_option('display.max_rows', None)
+    pd.set_option('display.max_columns', None)
+
+    # Read the CSV file into a DataFrame
+    df = pd.read_csv('/Users/igorpolidva/PycharmProjects/Walmart Sales/Walmart_Sales.csv')
+    # Convert `Date` column to datetime Convert `Date` column to MM-DD-YYYY format
+    df['Date'] = pd.to_datetime(df['Date'], format='%d-%m-%Y').dt.strftime('%m-%d-%Y')
+
+    # Sort by `Store` and `Date`
+    df = df.sort_values(['Store', 'Date'])
+
+    # Round the columns to the specified decimal places
+    df['Weekly_Sales'] = df['Weekly_Sales'].round(2)
+    df['Temperature'] = df['Temperature'].round(0).astype(int)
+    df['Fuel_Price'] = df['Fuel_Price'].round(2)
+    df['CPI'] = df['CPI'].round(3)
+    df['Unemployment'] = df['Unemployment'].round(3)
+    # Drop rows with missing values
+    df_dropped_na = df.dropna()
+
+    # Print the first 5 rows
+    return df_dropped_na.head()
+cleaning()
