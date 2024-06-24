@@ -45,7 +45,7 @@ Use the \copy command to import data to a table on a PostgreSQL from CSV file (c
 
 
 Business Answers:
-1) The field with the strongest correlation with the phishing field is n_slash (0.611). The field with the weakest correlation with the phishing field is n_plus (0.007).
+1) The field with the strongest correlation with the phishing field is n_slash (0.611). The field with the weakest correlation with the phishing field is n_plus (0.007). Heatmap in images.
 2) URL length can be considered a moderately strong indicator of whether a URL is phishing. The analysis reveals the following:
 Mean URL Length: Phishing URLs have a significantly higher mean length (66.49) compared to non-phishing URLs (23.59).
 Distribution: The histograms illustrate that phishing URLs generally have longer lengths, with a wider distribution and more outliers.
