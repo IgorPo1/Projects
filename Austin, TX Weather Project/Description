@@ -1,14 +1,14 @@
-Description: In this project, you will analyze daily-aggregated weather data from Austin, Texas to draw conclusions and make future predictions about Austin’s climate.
+Description: In this project, I will analyze daily-aggregated weather data from Austin, Texas to draw conclusions and make future predictions about Austin’s climate.
 
 Difficulty: Hard
 
 Data download: https://www.kaggle.com/datasets/grubenm/austin-weather
 
 SQL Practice: 
-Pretend this data was stored in a table in a SQL server.  The table is named austin_weather and it contains all of the fields you see in the dataset in 5-minute intervals.  The data begins on January 1, 1990 at 12:00am and ends on December 31, 2020 at 11:55pm.  What SQL code would you write to query all of the data contained in the provided dataset, aggregated exactly how it is in the provided dataset?
+I will pretend this data was stored in a table in a SQL server.  The table is named austin_weather and it contains all of the fields I see in the dataset in 5-minute intervals.  The data begins on January 1, 1990 at 12:00am and ends on December 31, 2020 at 11:55pm.  What SQL code would I write to query all of the data contained in the provided dataset, aggregated exactly how it is in the provided dataset?
 
 Business Questions:
-1) Do you see any measurable changes in Austin’s climate (temperature, visibility, precipitation) throughout the period of the dataset? 
-2) What do you think may have caused these changes?
-3) Based on the data, what trends do you notice, and what predictions can you make for Austin’s climate in the future?
-4) Do you notice any correlation between any of the fields in the dataset?  Can we use the observed correlation to make future predictions?
+1) Do I see any measurable changes in Austin’s climate (temperature, visibility, precipitation) throughout the period of the dataset? 
+2) What do I think may have caused these changes?
+3) Based on the data, what trends do I notice, and what predictions can I make for Austin’s climate in the future?
+4) Do I notice any correlation between any of the fields in the dataset?  Can I use the observed correlation to make future predictions?
