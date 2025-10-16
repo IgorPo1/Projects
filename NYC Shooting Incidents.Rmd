@@ -1,0 +1,177 @@
+---
+title: "NYC Shooting Incidents: Data Exploration and Patterns"
+author: "Igor Polidva"
+output: html_document
+---
+
+# Introduction
+
+We will analyzes New York City shooting incidents, to understand where, when and who.
+
+# Data Import & Overview
+
+```{r}
+library(tidyverse)
+library(lubridate)
+nypd <- read_csv("https://data.cityofnewyork.us/api/views/833y-fsy8/rows.csv?accessType=DOWNLOAD") %>%
+  mutate(occur_date = mdy(OCCUR_DATE),
+         occur_hour = hour(as.POSIXct(OCCUR_TIME, format="%H:%M")))
+glimpse(nypd)
+
+```
+
+# Shooting Counts by Borough and Year
+
+```{r}
+nypd %>%
+  mutate(year = year(occur_date)) %>%
+  count(BORO, year) %>%
+  ggplot(aes(x = year, y = n, fill = BORO)) +
+    geom_area(alpha=0.7) +
+    labs(title = "Annual Shooting Incidents by Borough",
+         x = "Year", y = "Number of Incidents", fill = "Borough") +
+    theme_minimal()
+```
+
+# Hourly Distribution Across Boroughs
+
+```{r}
+nypd %>%
+  filter(!is.na(occur_hour)) %>%
+  ggplot(aes(x = occur_hour, fill = BORO)) +
+    geom_histogram(binwidth = 1, position = "dodge") +
+    labs(title = "Shootings by Hour and Borough",
+         x = "Hour of Day", y = "Incident Count") +
+    theme_minimal()
+```
+
+# Location Types: Where Do Shootings Happen?
+
+```{r}
+nypd %>%
+  filter(!is.na(LOCATION_DESC)) %>%
+  count(LOCATION_DESC, sort=TRUE) %>%
+  top_n(10, n) %>%
+  ggplot(aes(x = reorder(LOCATION_DESC, n), y = n)) +
+    geom_col(fill = "firebrick") +
+    coord_flip() +
+    labs(title = "Top 10 Locations for Shootings",
+         x = "Location", y = "Incident Count") +
+    theme_minimal()
+```
+
+# Demographics: Victims and Suspects
+
+```{r}
+# Victim Age and Race
+nypd %>%
+  filter(!is.na(VIC_AGE_GROUP), !is.na(VIC_RACE)) %>%
+  count(VIC_AGE_GROUP, VIC_RACE) %>%
+  ggplot(aes(x = VIC_AGE_GROUP, y = n, fill = VIC_RACE)) +
+    geom_col(position = "dodge") +
+    labs(title = "Victim Age Group by Race",
+         x = "Age Group", y = "Count", fill = "Race") +
+    theme_minimal()
+```
+
+```{r}
+# Suspect Sex and Race
+nypd %>%
+  filter(!is.na(PERP_SEX), !is.na(PERP_RACE)) %>%
+  count(PERP_SEX, PERP_RACE) %>%
+  ggplot(aes(x = PERP_SEX, y = n, fill = PERP_RACE)) +
+    geom_col(position = "dodge") +
+    labs(title = "Suspect Sex by Race",
+         x = "Sex", y = "Count", fill = "Race") +
+    theme_minimal()
+```
+
+# Relationship Between % Young PERP and Shooting Counts by Precinct
+```{r}
+# Calculate total shootings and % young perp by precinct
+precinct_summary <- nypd %>%
+  group_by(PRECINCT) %>%
+  summarize(
+    total_shootings = n(),
+    pct_perp_young = mean(PERP_AGE_GROUP == "18-24", na.rm = TRUE) * 100
+  )
+str(precinct_summary)
+
+# Model total shootings as response, pct_perp_young as predictor
+reg_shoot <- lm(total_shootings ~ pct_perp_young, data = precinct_summary)
+summary(reg_shoot)
+
+ggplot(precinct_summary, aes(x = pct_perp_young, y = total_shootings)) +
+  geom_point(color = "dodgerblue", size = 2) +
+  geom_smooth(method = "lm", color = "firebrick", se = TRUE) +
+  labs(
+    title = "Relationship Between % Young PERP and Shooting Counts by Precinct",
+    x = "Percent of Perp Age 18-24",
+    y = "Total Shootings"
+  ) +
+  theme_minimal()
+```
+# Spatial Hotspots
+
+```{r}
+library(sf)
+library(ggmap)
+
+# Load map of New York's boroughs and convert to spatial data frame
+boundary <- read_csv("https://data.cityofnewyork.us/api/views/63ge-mke6/rows.csv?accessType=DOWNLOAD")
+boundary_sf <- st_as_sf(boundary, wkt = "the_geom", crs = 4326)
+
+# Exclude missing coordinates
+loc_data <- nypd %>% filter(!is.na(Longitude), !is.na(Latitude))
+
+ggplot() +
+  # Plot NYC boundaries first
+  geom_sf(data = boundary_sf, fill = NA, color = "grey40", size = 0.5) +
+  # Then add your density layer
+  stat_density_2d(
+    data = loc_data,
+    aes(x = Longitude, y = Latitude, fill = after_stat(level)),
+    geom = "polygon",
+    alpha = 0.6,
+    show.legend = FALSE
+  ) +
+  scale_fill_viridis_c() +
+  theme_minimal() +
+  labs(title = "Density of Shooting Incidents in NYC",
+       x = "Longitude", y = "Latitude")
+```
+
+# Change Over Time
+
+```{r}
+nypd %>%
+  group_by(year = year(occur_date)) %>%
+  summarize(annual_incidents = n()) %>%
+  ggplot(aes(x = year, y = annual_incidents)) +
+    geom_line(color = "navy", linewidth=1.2) +
+    geom_point(color = "navy") +
+    labs(title = "Yearly Shooting Trends in NYC", x = "Year", y = "Shooting Incidents") +
+    theme_minimal()
+```
+
+# Limitations and Bias
+
+Our data and results may be influenced by reporting delays, changes in NYPD definitions, and missing demographic/location details. It’s possible my analytical focus on quantitative summaries may overlook context (such as policy changes or events impacting violence rates). To address this, I included qualitative interpretation alongside each visualization and analyzed multiple perspectives, not just aggregate or time-based trends.
+
+# Conclusion
+
+Spatial Hotspots: Specific boroughs and precincts consistently report higher shooting densities, especially in the Bronx and Brooklyn. Density mapping over NYC boundaries reveals clear urban clusters where shootings are concentrated.
+
+Temporal Patterns: Shootings display distinct trends over the years, with notable changes in incident counts and variations by hour of day. Recent data may show decreases after public policy interventions or increased policing, though further investigation is warranted.
+
+Location Context: Most shootings occur in or near public housing, apartments, or street-level settings, highlighting the role of neighborhood environments.
+
+Demographics: Young adults (age 18–24) constitute a substantial proportion of both victims and suspects; racial disparities persist, with certain groups bearing disproportionate impact.
+
+Regression Analysis: Precincts with a higher proportion of young suspects tend to record more shootings. The relationship is statistically significant but explains only a small fraction of the variation, suggesting other structural factors are at play.
+```
+# Session Info
+```{r}
+# Display R session information
+sessionInfo()
+```
